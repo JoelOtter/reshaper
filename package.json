@@ -1,0 +1,11 @@
+{
+    "name": "reshaper",
+    "version": "0.0.1",
+    "description": "Reshape JavaScript data structures to match a schema",
+    "author": "Joel Auterson <joel.auterson@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/JoelOtter/reshaper"
+    },
+    "license": "MIT"
+}
