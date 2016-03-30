@@ -16,6 +16,7 @@ describe('reshaper', function() {
                 name: 'Joel',
                 info: {
                     age: 23,
+                    height: 1.9,
                     middleName: 'Robert',
                     lastName: 'Auterson'
                 }
@@ -24,6 +25,7 @@ describe('reshaper', function() {
                 name: 'Jake',
                 info: {
                     age: 24,
+                    height: 1.85,
                     middleName: 'Wild',
                     lastName: 'Hall'
                 }
@@ -73,18 +75,31 @@ describe('reshaper', function() {
         });
 
         it('should return the same data when called with a matching schema', function() {
-            var peopleSchema = [
+            var schema = [
                 {
                     name: 'String',
                     info: {
                         age: 'Number',
+                        height: 'Number',
                         middleName: 'String',
                         lastName: 'String'
                     }
                 }
             ];
-            var result = reshaper.findShape(peopleData, peopleSchema);
+            var result = reshaper.findShape(peopleData, schema);
             expect(result).to.eql(peopleData);
+        });
+
+        it('should extract separate arrays into an object', function() {
+            var schema = {
+                age: ['Number'],
+                height: ['Number']
+            };
+            var result = reshaper.findShape(peopleData, schema);
+            expect(result).to.eql({
+                age: [23, 24],
+                height: [1.9, 1.85]
+            });
         });
 
     });
