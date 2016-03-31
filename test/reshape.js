@@ -102,6 +102,49 @@ describe('reshaper', function() {
             });
         });
 
+        it('should extract arrays from varying depths into object', function() {
+            var schema = {
+                name: ['String'],
+                lastName: ['String']
+            };
+            var result = reshaper.findShape(peopleData, schema);
+            expect(result).to.eql({
+                name: ['Joel', 'Jake'],
+                lastName: ['Auterson', 'Hall']
+            });
+        });
+
+        it('should not matter what order the schema is in', function() {
+            var schema = {
+                name: ['String'],
+                lastName: ['String'],
+                middleName: ['String']
+            };
+            var result = reshaper.findShape(peopleData, schema);
+            schema = {
+                lastName: ['String'],
+                middleName: ['String'],
+                name: ['String']
+            };
+            var result2 = reshaper.findShape(peopleData, schema);
+            expect(result2).to.eql(result);
+        });
+
+        it('should, with no hint, pick the shallowest', function() {
+            var schema = ['String'];
+            var result = reshaper.findShape(peopleData, schema, 'firstName');
+            expect(result).to.eql(['Joel', 'Jake']);
+            schema = {
+                firstName: ['String'],
+                lastName: ['String']
+            };
+            result = reshaper.findShape(peopleData, schema);
+            expect(result).to.eql({
+                firstName: ['Joel', 'Jake'],
+                lastName: ['Auterson', 'Hall']
+            });
+        });
+
     });
 
 });
