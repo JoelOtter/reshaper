@@ -8,7 +8,7 @@ Reshaper is a JavaScript library which can automatically restructure JavaScript 
 
 ## Usage
 
-#### reshaper.findShapes(data, schema, [hint])
+#### `reshaper.findShapes(data, schema, [hint])`
 
 - `data`: The JavaScript data structure to be reshaped.
 - `schema`: The structure we want our reshaped data to match.
