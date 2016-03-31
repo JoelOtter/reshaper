@@ -177,6 +177,34 @@ describe('reshaper', function() {
             });
         });
 
-    });
+        it('should be able to create an array from an object', function() {
+            var data = {
+                red: 1,
+                green: 2,
+                blue: 3
+            };
+            var schema = {
+                colour: ['Number']
+            };
+            var result = reshaper.findShape(data, schema);
+            expect(result).to.eql({
+                colour: [1, 2, 3]
+            });
+        });
 
+        it('should do object-array conversion on the outer elements', function() {
+            var data = {
+                a: 1,
+                b: 2,
+                cd: {
+                    c: 3,
+                    d: 4
+                }
+            };
+            var schema = ['Number'];
+            var result = reshaper.findShape(data, schema);
+            expect(result).to.eql([1, 2]);
+        });
+
+    });
 });
