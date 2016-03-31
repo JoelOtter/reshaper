@@ -36,4 +36,17 @@ reshaper.findShape(peopleData, schema);
 reshaper.findShape(peopleData, schema, 'lastName');
 // => ['Auterson', 'Hall']
 
+var schema = {
+    age: ['Number'],
+    height: ['Number']
+};
+
+reshaper.findShape(peopleData, schema);
+/* =>
+{
+    age: [23, 24],
+    height: [1.9, 1.85]
+}
+*/
+
 ```
