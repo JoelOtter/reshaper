@@ -2,6 +2,8 @@
 
 Reshaper is a JavaScript library which can automatically restructure JavaScript objects to match a provided schema. It also provides users with some manual control, by way of a 'hint' system.
 
+**Note**: Reshaper is currently in active development. I don't yet consider it to be stable or suitable for serious usage.
+
 ## Examples
 
 ```javascript
