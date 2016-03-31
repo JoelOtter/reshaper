@@ -145,6 +145,38 @@ describe('reshaper', function() {
             });
         });
 
+        it('should be able to construct arrays from different levels', function() {
+            var rectangles = [
+                {
+                    width: 5,
+                    height: 4,
+                    colour: {
+                        red: 255,
+                        green: 128,
+                        blue: 0
+                    }
+                },
+                {
+                    width: 10,
+                    height: 2,
+                    colour: {
+                        red: 50,
+                        green: 90,
+                        blue: 255
+                    }
+                }
+            ];
+            var schema = {
+                width: ['Number'],
+                red: ['Number']
+            };
+            var result = reshaper.findShape(rectangles, schema);
+            expect(result).to.eql({
+                width: [5, 10],
+                red: [255, 50]
+            });
+        });
+
     });
 
 });
