@@ -5,7 +5,11 @@ describe('reshaper', function() {
 
     describe('#findShape()', function() {
 
-        var schema = ['Number']
+        var schema = ['Number'];
+        var genericSchema = [{
+            x: 'String',
+            y: 'Number'
+        }];
         var data = [
             {x: 12, y: 5},
             {x: 2, y: 3},
@@ -204,6 +208,46 @@ describe('reshaper', function() {
             var schema = ['Number'];
             var result = reshaper.findShape(data, schema);
             expect(result).to.eql([1, 2]);
+        });
+
+        it('should allow hints to be used within objects', function() {
+            var result = reshaper.findShape(peopleData, genericSchema, 'height');
+            expect(result).to.eql([
+                {x: 'Joel', y: 1.9},
+                {x: 'Jake', y: 1.85}
+            ]);
+        });
+
+        it('should allow multiple hints to be used', function() {
+            var result = reshaper.findShape(peopleData, genericSchema, ['lastName', 'height']);
+            expect(result).to.eql([
+                {x: 'Auterson', y: 1.9},
+                {x: 'Hall', y: 1.85}
+            ]);
+        });
+
+        it('should fix on a used key', function() {
+            var data = [{a: 1, b: 2}, {b: 3, a: 4}];
+            var schema = ['Number'];
+            var result = reshaper.findShape(data, schema);
+            expect(result).to.eql([1, 4]);
+        });
+
+        it('should avoid using hints twice', function() {
+            var schema = {
+                x: ['String'],
+                y: ['String']
+            };
+            var result = reshaper.findShape(peopleData, schema, ['lastName', 'middleName']);
+            expect(result).to.eql({
+                x: ['Auterson', 'Hall'],
+                y: ['Robert', 'Wild']
+            });
+            var result = reshaper.findShape(peopleData, schema, ['middleName', 'lastName']);
+            expect(result).to.eql({
+                y: ['Auterson', 'Hall'],
+                x: ['Robert', 'Wild']
+            });
         });
 
     });
