@@ -12,7 +12,7 @@ Reshaper is a JavaScript library which can automatically restructure JavaScript 
 
 - `data`: The JavaScript data structure to be reshaped.
 - `schema`: The structure we want our reshaped data to match.
-- `hint`: _(Optional)_ The name of an object key, given as a 'hint'. Keys matching this hint will be preferred.
+- `hint`: _(Optional)_ The name of an object key, given as a 'hint'. Keys matching this hint will be preferred. An array of keys can also be provided if desired.
 
 ## Examples
 
