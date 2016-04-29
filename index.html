@@ -1,0 +1,169 @@
+<html>
+    <head>
+        <title>Reshaper</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Reshaper is a JavaScript library for reshaping your data to match a schema.">
+        <meta http-equiv="content-type" content="text/html; charset=UTF8">
+        <link rel="stylesheet" href="http://www.joelotter.com/kajero/dist/main.css">
+        <meta property="og:title" content="reshaper">
+        <meta property="og:url" content="https://www.joelotter.com/reshaper">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="Reshaper">
+        <meta property="og:description" content="Reshaper is a JavaScript library for reshaping your data to match a schema.">
+        <meta property="og:site_name" content="Kajero">
+        <meta property="og:locale" content="en_GB">
+        <meta property="article:author" content="Joel Auterson">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:creator" content="@JoelOtter">
+        <meta name="twitter:url" content="https://www.joelotter.com/reshaper">
+        <meta name="twitter:title" content="Reshaper">
+        <meta name="twitter:description" content="Reshaper is a JavaScript library for reshaping your data to match a schema.">
+    </head>
+    <body>
+        <script type="text/markdown" id="kajero-md">
+            ---
+            title: Reshaper
+            author: Joel Auterson
+            created: Fri Apr 29 2016 22:54:32 GMT+0100 (BST)
+            datasources:
+                github: https://api.github.com/search/repositories?q=created:>2015-01-01&created:<2016-01-01&sort=stars&order=desc
+            original:
+                title: Reshaper
+                url: http://www.joelotter.com/kajero/?id=70f0880a034974eb9e4111e9deeade4d
+            show_footer: true
+            ---
+
+            [![Build Status](https://travis-ci.org/JoelOtter/reshaper.svg?branch=master)](https://travis-ci.org/JoelOtter/reshaper) [![Coverage Status](https://coveralls.io/repos/github/JoelOtter/reshaper/badge.svg?branch=master)](https://coveralls.io/github/JoelOtter/reshaper?branch=master) [![GitHub issues](https://img.shields.io/github/issues/joelotter/reshaper.svg)](https://github.com/joelotter/reshaper/issues) [![GitHub stars](https://img.shields.io/github/stars/joelotter/reshaper.svg)](https://github.com/joelotter/reshaper/stargazers)
+
+            [Reshaper](https://github.com/JoelOtter/reshaper) is a JavaScript library for reshaping your data to match a schema.
+
+            You can use it to easily morph large data structures into a useful shape, without needing to write lots of parsing code.
+
+
+            ## Installation
+
+            To get started:
+
+            ```sh
+            npm install --save reshaper
+            ```
+            ```js
+            var reshaper = require('reshaper');
+            ```
+
+            ## Usage
+
+            #### findShape(data, schema, [hint(s)])
+
+            - **data** - the data to be reshaped.
+            - **schema** - the desired shape.
+            - **hint(s)** - a string, or array of strings, giving the names of the parts of the data we're interested in.
+
+            ## Example
+
+            Let's use GitHub API data as an example. Here are the 30 most popular repositories of 2015, by star count. This is a [Kajero](http://www.joelotter.com/kajero) notebook, so you can run any code samples with a play button.
+
+            ```javascript
+            return data.github;
+            ```
+
+            Let's say that for some reason we need an array of strings. We can easily pull one out of the data by defining a schema.
+
+            A schema tells Reshaper what shape we need the data to be in. For example, the schema for an array of strings would simply be:
+
+            ```js
+            var schema = ['String'];
+            ```
+
+            If it was an array of numbers:
+
+            ```js
+            var schema = ['Number'];
+            ```
+
+            You can have more complex schemas, like an array of objects:
+
+            ```js
+            var schema = [{
+                name: 'String',
+                stargazers: 'Number'
+            }];
+            ```
+
+            Or schemas that are very different - e.g. for turning an array of objects into an object of arrays, we could use this schema:
+
+            ```js
+            var schema = {
+                name: ['String'],
+                stargazers: ['Number']
+            };
+            ```
+
+            Let's try it on our GitHub data! To start with, let's try and just get the names of the repositories as an array.
+
+            ```javascript
+            var schema = ['String'];
+            return reshaper.findShape(data.github, schema);
+            ```
+
+            Reshaper has built us an array of strings - but it's the wrong one! For me it's used the hooks URL - you might see something else, depending on the GitHub API at the time you're reading it. This is because Reshaper doesn't know which string we want, so it just uses the first one it can find.
+
+            Thankfully, we can resolve this very easily, by giving Reshaper a **hint**. This is just a string (or array of strings) which tells Reshaper which part of the data we're interested in.
+
+            Let's use a hint to get the repo names.
+
+            ```javascript
+            var schema = ['String'];
+            return reshaper.findShape(data.github, schema, 'name');
+            ```
+
+            Great, that's worked. Let's look at an example with a more complex schema. Say we wanted to build a graph of repos and their stargazers, we might want a data structure like this one:
+
+            ```javascript
+            var schema = [{
+                name: 'String',
+                stargazers_count: 'Number'
+            }];
+
+            this.toGraph = reshaper.findShape(data.github, schema);
+            return this.toGraph;
+            ```
+
+            Great! We've now got an array of objects. But what if our graphing library needs an array for each property - an object of arrays?
+
+            That's fine too. We could reshape the GitHub data again, but why don't we try reshaping the data we created in the last example?
+
+            ```javascript
+            var schema = {
+                name: ['String'],
+                stargazers_count: ['Number']
+            };
+
+            return reshaper.findShape(this.toGraph, schema);
+            ```
+
+            ## Where's this used?
+
+            Reshaper is used in [Smolder](https://github.com/JoelOtter/smolder), which is a library wrapper that will automatically reshape the data going into your functions. This means you can just throw data at your functions without needing to do any awkward JS type checking.
+
+            If you'd like to see an example of a real-world project using Smolder, check out [Jutsu](https://github.com/JoelOtter/jutsu), a very simple graphing library.
+
+            Jutsu is included in Kajero notebooks like this one, so here's a little sneak peek.
+
+            ```javascript
+            return graphs.barChart(data.github, 'Repo', 'Stargazers', ['name', 'stargazers_count']);
+            ```
+
+            ## Questions? Feedback?
+
+            Please feel free to file an [issue](https://github.com/JoelOtter/reshaper/issues) with any you may have.
+
+            Reshaper is a part of my Master's project at Imperial College London, and as part of my evaluation I'd really love to hear any feedback you might have. Feel free to [shoot me an email](mailto:joel.auterson@gmail.com).
+
+            I hope you find Reshaper useful!
+        </script>
+        <div id="kajero"></div>
+        <script type="text/javascript" src="http://www.joelotter.com/kajero/dist/bundle.js"></script>
+    </body>
+</html>
+
