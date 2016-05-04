@@ -62,7 +62,7 @@
 
             Let's use GitHub API data as an example. Here are the 30 most popular repositories of 2015, by star count. This is a [Kajero](http://www.joelotter.com/kajero) notebook, so you can run any code samples with a play button.
 
-            ```javascript
+            ```javascript; runnable
             return data.github;
             ```
 
@@ -100,7 +100,7 @@
 
             Let's try it on our GitHub data! To start with, let's try and just get the names of the repositories as an array.
 
-            ```javascript
+            ```javascript; runnable
             var schema = ['String'];
             return reshaper.findShape(data.github, schema);
             ```
@@ -111,14 +111,14 @@
 
             Let's use a hint to get the repo names.
 
-            ```javascript
+            ```javascript; runnable
             var schema = ['String'];
             return reshaper.findShape(data.github, schema, 'name');
             ```
 
             Great, that's worked. Let's look at an example with a more complex schema. Say we wanted to build a graph of repos and their stargazers, we might want a data structure like this one:
 
-            ```javascript
+            ```javascript; runnable
             var schema = [{
                 name: 'String',
                 stargazers_count: 'Number'
@@ -132,7 +132,7 @@
 
             That's fine too. We could reshape the GitHub data again, but why don't we try reshaping the data we created in the last example?
 
-            ```javascript
+            ```javascript; runnable
             var schema = {
                 name: ['String'],
                 stargazers_count: ['Number']
@@ -149,7 +149,7 @@
 
             Jutsu is included in Kajero notebooks like this one, so here's a little sneak peek.
 
-            ```javascript
+            ```javascript; runnable
             return graphs.barChart(data.github, 'Repo', 'Stargazers', ['name', 'stargazers_count']);
             ```
 
