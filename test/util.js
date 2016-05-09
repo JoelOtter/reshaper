@@ -55,4 +55,28 @@ describe('util', function() {
 
     });
 
+    describe('#removeFromArray', function() {
+
+        var arr = [1, 2, 3, 4];
+
+        it('should remove item at index', function() {
+            var a = arr.slice();
+            util.removeFromArray(a, 1);
+            expect(a).to.eql([1, 3, 4]);
+        });
+
+        it('should remove items from -> to inclusive', function() {
+            var a = arr.slice();
+            util.removeFromArray(a, 1, 3);
+            expect(a).to.eql([1]);
+        });
+
+        it('should allow negative from values', function() {
+            var a = arr.slice();
+            util.removeFromArray(a, -1);
+            expect(a).to.eql([1, 2, 3]);
+        });
+
+    });
+
 });
