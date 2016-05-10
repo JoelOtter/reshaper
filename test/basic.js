@@ -21,7 +21,8 @@ describe('basic', function() {
                 height: 1.9,
                 middleName: 'Robert',
                 lastName: 'Auterson',
-                twitter: '@JoelOtter'
+                twitter: '@JoelOtter',
+                softwareDeveloper: true
             }
         },
         {
@@ -31,7 +32,8 @@ describe('basic', function() {
                 height: 1.85,
                 middleName: 'Wild',
                 lastName: 'Hall',
-                twitter: '@JakeWildHall'
+                twitter: '@JakeWildHall',
+                softwareDeveloper: false
             }
         }
     ];
@@ -63,6 +65,12 @@ describe('basic', function() {
         expect(result).to.eql(['Auterson', 'Hall']);
     });
 
+    it('should handle booleans', function() {
+        var schema = ['Boolean'];
+        var result = reshaper.findShape(peopleData, schema);
+        expect(result).to.eql([true, false]);
+    });
+
     it('should extract arrays of simple objects from people data', function() {
         var schema = [{name: 'String', age: 'Number'}];
         var result = reshaper.findShape(peopleData, schema);
@@ -87,7 +95,8 @@ describe('basic', function() {
                     height: 'Number',
                     middleName: 'String',
                     lastName: 'String',
-                    twitter: 'String'
+                    twitter: 'String',
+                    softwareDeveloper: 'Boolean'
                 }
             }
         ];

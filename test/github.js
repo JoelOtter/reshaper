@@ -6,7 +6,6 @@ var data = JSON.parse(fs.readFileSync('./test/github_popular.json'));
 
 describe('github popular repos', function() {
 
-
     it('should extract the correct numbers on with hints provided', function() {
         var schema = [
             {
@@ -43,6 +42,18 @@ describe('github popular repos', function() {
             };
         });
         expect(result).to.eql(expd);
+    });
+
+    it('should work with object hints', function() {
+        var schema = [{label: 'String', value: 'Number'}];
+        var hint = {label: 'name', value: 'stargazers_count'};
+        var result = reshaper.findShape(data, schema, hint);
+        expect(result).to.eql(data.items.map(function (item) {
+            return {
+                label: item.name,
+                value: item.stargazers_count
+            }
+        }));
     });
 
 });

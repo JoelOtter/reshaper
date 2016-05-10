@@ -101,4 +101,19 @@ describe('object hints', function() {
         });
     });
 
+    it('should allow missing hints', function() {
+        var schema = {
+            a: ['String'],
+            b: ['String']
+        };
+        var hint = {
+            a: 'lastName'
+        };
+        var result = reshaper.findShape(peopleData, schema, hint);
+        expect(result).to.eql({
+            a: ['Auterson', 'Hall'],
+            b: ['Joel', 'Jake']
+        });
+    });
+
 });
