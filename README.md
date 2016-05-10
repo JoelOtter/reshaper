@@ -1,6 +1,6 @@
 # Reshaper
 
-[![Build Status](https://travis-ci.org/JoelOtter/reshaper.svg?branch=master)](https://travis-ci.org/JoelOtter/reshaper) [![Coverage Status](https://coveralls.io/repos/github/JoelOtter/reshaper/badge.svg?branch=master)](https://coveralls.io/github/JoelOtter/reshaper?branch=master)
+[![Build Status](https://travis-ci.org/JoelOtter/reshaper.svg?branch=master)](https://travis-ci.org/JoelOtter/reshaper) [![Coverage Status](https://coveralls.io/repos/github/JoelOtter/reshaper/badge.svg?branch=master)](https://coveralls.io/github/JoelOtter/reshaper?branch=master) [![](https://img.shields.io/npm/v/reshaper.svg)](https://www.npmjs.com/package/reshaper)
 
 Reshaper is a JavaScript library which can automatically restructure JavaScript objects to match a provided schema. It also provides users with some manual control, by way of a 'hint' system.
 
