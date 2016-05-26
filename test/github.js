@@ -56,4 +56,29 @@ describe('github popular repos', function() {
         }));
     });
 
+    it('should work with dotted hints', function() {
+        var schema = [{link: 'String', id: 'Number'}];
+        var hint = {link: 'owner.url', id: 'owner.id'};
+        var result = reshaper.findShape(data, schema, hint);
+        expect(result).to.eql(data.items.map(function (item) {
+            return {
+                link: item.owner.url,
+                id: item.owner.id
+            };
+        }));
+    });
+
+    it('should work with dotted hint wildcards', function() {
+        var schema = [{repo: 'Number', person: 'Number'}];
+        var hint = {repo: 'id', person: '_.id'};
+        var result = reshaper.findShape(data, schema, hint);
+        expect(result).to.eql(data.items.map(function (item) {
+            return {
+                repo: item.id,
+                person: item.owner.id
+            };
+        }));
+
+    });
+
 });

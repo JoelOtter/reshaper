@@ -26,6 +26,29 @@ describe('object hints', function() {
         }
     ];
 
+    var peoplePetData = [
+        {
+            name: 'Joel',
+            pet: {
+                name: 'Tony',
+                species: 'Dog',
+                toy: {
+                    name: 'Wobbles'
+                }
+            }
+        },
+        {
+            name: 'Andrea',
+            pet: {
+                name: 'Carluccio',
+                species: 'Pasta',
+                toy: {
+                    name: 'Luigi'
+                }
+            }
+        }
+    ];
+
     it('should allow object hints', function() {
         var schema = {
             x: ['String'],
@@ -114,6 +137,37 @@ describe('object hints', function() {
             a: ['Auterson', 'Hall'],
             b: ['Joel', 'Jake']
         });
+    });
+
+    it('should allow dotted hints', function() {
+        var schema = [{
+            name: 'String',
+            pet: 'String'
+        }];
+
+        var result = reshaper.findShape(peoplePetData, schema, {pet: 'pet.name'});
+        expect(result).to.eql([
+            {name: 'Joel', pet: 'Tony'},
+            {name: 'Andrea', pet: 'Carluccio'}
+        ]);
+        result = reshaper.findShape(peoplePetData, schema, {pet: 'pet.toy.name'});
+        expect(result).to.eql([
+            {name: 'Joel', pet: 'Wobbles'},
+            {name: 'Andrea', pet: 'Luigi'}
+        ]);
+    });
+
+    it('should allow wildcards in dotted hints', function() {
+        var schema = [{
+            name: 'String',
+            pet: 'String'
+        }];
+
+        result = reshaper.findShape(peoplePetData, schema, {pet: '_._.name'});
+        expect(result).to.eql([
+            {name: 'Joel', pet: 'Wobbles'},
+            {name: 'Andrea', pet: 'Luigi'}
+        ]);
     });
 
 });
