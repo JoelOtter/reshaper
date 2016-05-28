@@ -71,6 +71,15 @@ describe('basic', function() {
         expect(result).to.eql([true, false]);
     });
 
+    it('should have appropriate backoff for arrays', function() {
+        var data = {
+            nums: [1, 2, 3],
+            strs: ['a', 'b', 'c']
+        };
+        var result = reshaper.findShape(data, ['String']);
+        expect(result).to.eql(['a', 'b', 'c']);
+    });
+
     it('should extract arrays of simple objects from people data', function() {
         var schema = [{name: 'String', age: 'Number'}];
         var result = reshaper.findShape(peopleData, schema);
