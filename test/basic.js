@@ -80,6 +80,43 @@ describe('basic', function() {
         expect(result).to.eql(['a', 'b', 'c']);
     });
 
+    it('should have appropriate backoff for objects', function() {
+        var data = {
+            thing: {
+                a: 1,
+                b: 2
+            },
+            other: {
+                c: 'e',
+                d: 'f'
+            }
+        };
+        var schema = {one: 'String', two: 'String'};
+        expect(reshaper.findShape(data, schema)).to.eql({
+            one: 'e',
+            two: 'f'
+        });
+    });
+
+    it('should not have backoff if hint is provided', function() {
+        var data = {
+            thing: {
+                a: 1,
+                b: 2
+            },
+            other: {
+                c: 'e',
+                d: 'f'
+            }
+        };
+        var schema = {one: 'String', two: 'String'};
+        expect(reshaper.findShape(data, schema, {one: 'c'})).to.eql({
+            one: 'e',
+            two: 'e'
+        });
+
+    });
+
     it('should extract arrays of simple objects from people data', function() {
         var schema = [{name: 'String', age: 'Number'}];
         var result = reshaper.findShape(peopleData, schema);
