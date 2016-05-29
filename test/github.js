@@ -32,7 +32,7 @@ describe('github popular repos', function() {
             }
         ];
         var result = reshaper.findShape(
-            data.items, schema, ['open_issues', 'stargazers_count', 'name']
+            data, schema, ['open_issues', 'stargazers_count', 'name']
         );
         var expd = data.items.map(function (item) {
             return {

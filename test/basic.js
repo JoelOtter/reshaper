@@ -98,7 +98,7 @@ describe('basic', function() {
         });
     });
 
-    it('should not have backoff if hint is provided', function() {
+    it('should backoff even if hint is missing', function() {
         var data = {
             thing: {
                 a: 1,
@@ -112,7 +112,7 @@ describe('basic', function() {
         var schema = {one: 'String', two: 'String'};
         expect(reshaper.findShape(data, schema, {one: 'c'})).to.eql({
             one: 'e',
-            two: 'e'
+            two: 'f'
         });
 
     });
