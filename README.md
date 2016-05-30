@@ -12,7 +12,7 @@ To see some interactive examples, check out this [Kajero notebook](http://www.jo
 
 ## Usage
 
-#### `reshaper.findShapes(data, schema, [hint])`
+#### `reshaper(data, schema, [hint])`
 
 - `data`: The JavaScript data structure to be reshaped.
 - `schema`: The structure we want our reshaped data to match.
@@ -46,11 +46,11 @@ var peopleData = [
 
 var schema = ['String'];
 
-reshaper.findShape(peopleData, schema);
+reshaper(peopleData, schema);
 // => ['Joel', 'Jake']
 
 // We can give a 'hint', to say lastName is what we want.
-reshaper.findShape(peopleData, schema, 'lastName');
+reshaper(peopleData, schema, 'lastName');
 // => ['Auterson', 'Hall']
 
 // Object keys get used as hints
@@ -59,7 +59,7 @@ var schema = {
     height: ['Number']
 };
 
-reshaper.findShape(peopleData, schema);
+reshaper(peopleData, schema);
 /* =>
 {
     age: [22, 24],
