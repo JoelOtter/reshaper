@@ -323,4 +323,14 @@ describe('basic', function() {
         }).to.throw('Could not find');
     });
 
+    it('should throw exception if part of schema cannot be found', function() {
+        var schema = {
+            words: ['String'],
+            nums: ['Number']
+        };
+        expect(function() {
+            reshaper([1, 2, 3], schema)
+        }).to.throw('Could not find');
+    });
+
 });
