@@ -39,41 +39,87 @@ describe('basic', function() {
     ];
 
     it('should return array of x values without hinting', function() {
-        var result = reshaper.findShape(data, schema);
+        var result = reshaper(data, schema);
         expect(result).to.eql([12, 2, 9]);
     });
 
     it('should return array of y values with y hint', function() {
-        var result = reshaper.findShape(data, schema, 'y');
+        var result = reshaper(data, schema, 'y');
         expect(result).to.eql([5, 3, 14]);
     });
 
     it('should extract ages from people data', function() {
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql([23, 24]);
     });
 
     it('should extract first names from people data', function() {
         var schema = ['String'];
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql(['Joel', 'Jake']);
     });
 
     it('should extract last names from people data', function() {
         var schema = ['String'];
-        var result = reshaper.findShape(peopleData, schema, 'lastName');
+        var result = reshaper(peopleData, schema, 'lastName');
         expect(result).to.eql(['Auterson', 'Hall']);
     });
 
     it('should handle booleans', function() {
         var schema = ['Boolean'];
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql([true, false]);
+    });
+
+    it('should have appropriate backoff for arrays', function() {
+        var data = {
+            nums: [1, 2, 3],
+            strs: ['a', 'b', 'c']
+        };
+        var result = reshaper(data, ['String']);
+        expect(result).to.eql(['a', 'b', 'c']);
+    });
+
+    it('should have appropriate backoff for objects', function() {
+        var data = {
+            thing: {
+                a: 1,
+                b: 2
+            },
+            other: {
+                c: 'e',
+                d: 'f'
+            }
+        };
+        var schema = {one: 'String', two: 'String'};
+        expect(reshaper(data, schema)).to.eql({
+            one: 'e',
+            two: 'f'
+        });
+    });
+
+    it('should backoff even if hint is missing', function() {
+        var data = {
+            thing: {
+                a: 1,
+                b: 2
+            },
+            other: {
+                c: 'e',
+                d: 'f'
+            }
+        };
+        var schema = {one: 'String', two: 'String'};
+        expect(reshaper(data, schema, {one: 'c'})).to.eql({
+            one: 'e',
+            two: 'f'
+        });
+
     });
 
     it('should extract arrays of simple objects from people data', function() {
         var schema = [{name: 'String', age: 'Number'}];
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql([
             {
                 name: 'Joel',
@@ -100,7 +146,7 @@ describe('basic', function() {
                 }
             }
         ];
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql(peopleData);
     });
 
@@ -109,7 +155,7 @@ describe('basic', function() {
             age: ['Number'],
             height: ['Number']
         };
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql({
             age: [23, 24],
             height: [1.9, 1.85]
@@ -121,7 +167,7 @@ describe('basic', function() {
             name: ['String'],
             lastName: ['String']
         };
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         expect(result).to.eql({
             name: ['Joel', 'Jake'],
             lastName: ['Auterson', 'Hall']
@@ -134,25 +180,25 @@ describe('basic', function() {
             lastName: ['String'],
             middleName: ['String']
         };
-        var result = reshaper.findShape(peopleData, schema);
+        var result = reshaper(peopleData, schema);
         schema = {
             lastName: ['String'],
             middleName: ['String'],
             name: ['String']
         };
-        var result2 = reshaper.findShape(peopleData, schema);
+        var result2 = reshaper(peopleData, schema);
         expect(result2).to.eql(result);
     });
 
     it('should, with no hint, pick the shallowest', function() {
         var schema = ['String'];
-        var result = reshaper.findShape(peopleData, schema, 'firstName');
+        var result = reshaper(peopleData, schema, 'firstName');
         expect(result).to.eql(['Joel', 'Jake']);
         schema = {
             firstName: ['String'],
             lastName: ['String']
         };
-        result = reshaper.findShape(peopleData, schema);
+        result = reshaper(peopleData, schema);
         expect(result).to.eql({
             firstName: ['Joel', 'Jake'],
             lastName: ['Auterson', 'Hall']
@@ -184,7 +230,7 @@ describe('basic', function() {
             width: ['Number'],
             red: ['Number']
         };
-        var result = reshaper.findShape(rectangles, schema);
+        var result = reshaper(rectangles, schema);
         expect(result).to.eql({
             width: [5, 10],
             red: [255, 50]
@@ -200,7 +246,7 @@ describe('basic', function() {
         var schema = {
             colour: ['Number']
         };
-        var result = reshaper.findShape(data, schema);
+        var result = reshaper(data, schema);
         expect(result).to.eql({
             colour: [1, 2, 3]
         });
@@ -216,12 +262,12 @@ describe('basic', function() {
             }
         };
         var schema = ['Number'];
-        var result = reshaper.findShape(data, schema);
+        var result = reshaper(data, schema);
         expect(result).to.eql([1, 2]);
     });
 
     it('should allow hints to be used within objects', function() {
-        var result = reshaper.findShape(peopleData, genericSchema, 'height');
+        var result = reshaper(peopleData, genericSchema, 'height');
         expect(result).to.eql([
             {x: 'Joel', y: 1.9},
             {x: 'Jake', y: 1.85}
@@ -229,7 +275,7 @@ describe('basic', function() {
     });
 
     it('should allow multiple hints to be used', function() {
-        var result = reshaper.findShape(peopleData, genericSchema, ['lastName', 'height']);
+        var result = reshaper(peopleData, genericSchema, ['lastName', 'height']);
         expect(result).to.eql([
             {x: 'Auterson', y: 1.9},
             {x: 'Hall', y: 1.85}
@@ -239,7 +285,7 @@ describe('basic', function() {
     it('should fix on a used key', function() {
         var data = [{a: 1, b: 2}, {b: 3, a: 4}];
         var schema = ['Number'];
-        var result = reshaper.findShape(data, schema);
+        var result = reshaper(data, schema);
         expect(result).to.eql([1, 4]);
     });
 
@@ -248,16 +294,43 @@ describe('basic', function() {
             x: ['String'],
             y: ['String']
         };
-        var result = reshaper.findShape(peopleData, schema, ['lastName', 'middleName']);
+        var result = reshaper(peopleData, schema, ['lastName', 'middleName']);
         expect(result).to.eql({
             x: ['Auterson', 'Hall'],
             y: ['Robert', 'Wild']
         });
-        var result = reshaper.findShape(peopleData, schema, ['middleName', 'lastName']);
+        var result = reshaper(peopleData, schema, ['middleName', 'lastName']);
         expect(result).to.eql({
             y: ['Auterson', 'Hall'],
             x: ['Robert', 'Wild']
         });
+    });
+
+    it('should throw exception if cannot create array from object', function() {
+        var data = {
+            a: 'a',
+            b: 'b'
+        };
+        var schema = ['Number'];
+        expect(function() {
+            reshaper(data, schema)
+        }).to.throw('Could not find');
+    });
+
+    it('should throw exception if cannot create array from primitive', function() {
+        expect(function() {
+            reshaper('a', ['Number'])
+        }).to.throw('Could not find');
+    });
+
+    it('should throw exception if part of schema cannot be found', function() {
+        var schema = {
+            words: ['String'],
+            nums: ['Number']
+        };
+        expect(function() {
+            reshaper([1, 2, 3], schema)
+        }).to.throw('Could not find');
     });
 
 });

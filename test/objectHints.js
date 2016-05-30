@@ -58,7 +58,7 @@ describe('object hints', function() {
             x: 'twitter',
             y: 'middleName'
         };
-        var result = reshaper.findShape(peopleData, schema, hint);
+        var result = reshaper(peopleData, schema, hint);
         expect(result).to.eql({
             x: ['@JoelOtter', '@JakeWildHall'],
             y: ['Robert', 'Wild']
@@ -80,7 +80,7 @@ describe('object hints', function() {
                 b: 'height'
             }
         };
-        var result = reshaper.findShape(peopleData, schema, hint);
+        var result = reshaper(peopleData, schema, hint);
         expect(result).to.eql({
             x: ['Robert', 'Wild'],
             y: [
@@ -108,7 +108,7 @@ describe('object hints', function() {
             x: 'middleName',
             y: ['twitter', 'height']
         };
-        var result = reshaper.findShape(peopleData, schema, hint);
+        var result = reshaper(peopleData, schema, hint);
         expect(result).to.eql({
             x: ['Robert', 'Wild'],
             y: [
@@ -132,7 +132,7 @@ describe('object hints', function() {
         var hint = {
             a: 'lastName'
         };
-        var result = reshaper.findShape(peopleData, schema, hint);
+        var result = reshaper(peopleData, schema, hint);
         expect(result).to.eql({
             a: ['Auterson', 'Hall'],
             b: ['Joel', 'Jake']
@@ -145,12 +145,12 @@ describe('object hints', function() {
             pet: 'String'
         }];
 
-        var result = reshaper.findShape(peoplePetData, schema, {pet: 'pet.name'});
+        var result = reshaper(peoplePetData, schema, {pet: 'pet.name'});
         expect(result).to.eql([
             {name: 'Joel', pet: 'Tony'},
             {name: 'Andrea', pet: 'Carluccio'}
         ]);
-        result = reshaper.findShape(peoplePetData, schema, {pet: 'pet.toy.name'});
+        result = reshaper(peoplePetData, schema, {pet: 'pet.toy.name'});
         expect(result).to.eql([
             {name: 'Joel', pet: 'Wobbles'},
             {name: 'Andrea', pet: 'Luigi'}
@@ -163,7 +163,7 @@ describe('object hints', function() {
             pet: 'String'
         }];
 
-        result = reshaper.findShape(peoplePetData, schema, {pet: '_._.name'});
+        result = reshaper(peoplePetData, schema, {pet: '_._.name'});
         expect(result).to.eql([
             {name: 'Joel', pet: 'Wobbles'},
             {name: 'Andrea', pet: 'Luigi'}

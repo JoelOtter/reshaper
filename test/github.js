@@ -13,7 +13,7 @@ describe('github popular repos', function() {
                 y: 'Number'
             }
         ];
-        var result = reshaper.findShape(data.items, schema, ['open_issues', 'stargazers_count']);
+        var result = reshaper(data.items, schema, ['open_issues', 'stargazers_count']);
         var expd = data.items.map(function (item) {
             return {
                 x: item.open_issues,
@@ -31,8 +31,8 @@ describe('github popular repos', function() {
                 label: 'String'
             }
         ];
-        var result = reshaper.findShape(
-            data.items, schema, ['open_issues', 'stargazers_count', 'name']
+        var result = reshaper(
+            data, schema, ['open_issues', 'stargazers_count', 'name']
         );
         var expd = data.items.map(function (item) {
             return {
@@ -47,7 +47,7 @@ describe('github popular repos', function() {
     it('should work with object hints', function() {
         var schema = [{label: 'String', value: 'Number'}];
         var hint = {label: 'name', value: 'stargazers_count'};
-        var result = reshaper.findShape(data, schema, hint);
+        var result = reshaper(data, schema, hint);
         expect(result).to.eql(data.items.map(function (item) {
             return {
                 label: item.name,
@@ -59,7 +59,7 @@ describe('github popular repos', function() {
     it('should work with dotted hints', function() {
         var schema = [{link: 'String', id: 'Number'}];
         var hint = {link: 'owner.url', id: 'owner.id'};
-        var result = reshaper.findShape(data, schema, hint);
+        var result = reshaper(data, schema, hint);
         expect(result).to.eql(data.items.map(function (item) {
             return {
                 link: item.owner.url,
@@ -71,7 +71,7 @@ describe('github popular repos', function() {
     it('should work with dotted hint wildcards', function() {
         var schema = [{repo: 'Number', person: 'Number'}];
         var hint = {repo: 'id', person: '_.id'};
-        var result = reshaper.findShape(data, schema, hint);
+        var result = reshaper(data, schema, hint);
         expect(result).to.eql(data.items.map(function (item) {
             return {
                 repo: item.id,
