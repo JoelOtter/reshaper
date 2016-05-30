@@ -52,7 +52,7 @@
 
             ## Usage
 
-            #### findShape(data, schema, \[hint(s)\])
+            #### reshaper(data, schema, \[hint(s)\])
 
             - **data** - the data to be reshaped.
             - **schema** - the desired shape.
@@ -102,7 +102,7 @@
 
             ```javascript; runnable
             var schema = ['String'];
-            return reshaper.findShape(data.github, schema);
+            return reshaper(data.github, schema);
             ```
 
             Reshaper has built us an array of strings - but it's the wrong one! For me it's used the hooks URL - you might see something else, depending on the GitHub API at the time you're reading it. This is because Reshaper doesn't know which string we want, so it just uses the first one it can find.
@@ -113,7 +113,7 @@
 
             ```javascript; runnable
             var schema = ['String'];
-            return reshaper.findShape(data.github, schema, 'name');
+            return reshaper(data.github, schema, 'name');
             ```
 
             Great, that's worked. Let's look at an example with a more complex schema. Say we wanted to build a graph of repos and their stargazers, we might want a data structure like this one:
@@ -124,7 +124,7 @@
                 stargazers_count: 'Number'
             }];
 
-            this.toGraph = reshaper.findShape(data.github, schema);
+            this.toGraph = reshaper(data.github, schema);
             return this.toGraph;
             ```
 
@@ -138,7 +138,7 @@
                 stargazers_count: ['Number']
             };
 
-            return reshaper.findShape(this.toGraph, schema);
+            return reshaper(this.toGraph, schema);
             ```
 
             ## Where's this used?
