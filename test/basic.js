@@ -333,4 +333,50 @@ describe('basic', function() {
         }).to.throw('Could not find');
     });
 
+    it('should be able to backtrack multiple levels', function() {
+        var data = [
+            {
+                name: 'Joel',
+                pets: [
+                    {name: 'Tony', age: 24}
+                ]
+            },
+            {
+                name: 'Jake',
+                pets: [
+                    {name: 'Jim', age: 12},
+                    {name: 'Rico', age: 207}
+                ]
+            }
+        ];
+        var schema = {
+            names: ['String'],
+            ages: [{
+                age: ['Number']
+            }]
+        };
+        expect(reshaper(data, schema)).to.eql({
+            names: ['Joel', 'Jake'],
+            ages: [
+                {age: [24]},
+                {age: [12, 207]}
+            ]
+        });
+    });
+
+    it('should be able to backtrack from nested objects', function() {
+        var schema = {
+            names: ['String'],
+            extra: {
+                ages: ['Number']
+            }
+        };
+        expect(reshaper(peopleData, schema)).to.eql({
+            names: ['Joel', 'Jake'],
+            extra: {
+                ages: [23, 24]
+            }
+        });
+    });
+
 });
